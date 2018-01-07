@@ -95,14 +95,15 @@ def triplet_make (vertical, num1=5, num2=5, train=True, crop=True):
             if not os.path.exists (output_path):
                 os.mkdir (output_path)
             with open (output_path + "/triplets.csv", "a+") as csvFile:
-                writer = csv.writer (csvFile)
                 triplets = [[x[0], x[1], x[2], x[3]] for x in triplets]
-                print(triplets)
-                writer.writerows (triplets)
+                for triplet in triplets:
+                    ",".join(triplet)
+                    print(triplet)
+                    csvFile.write (triplet)
                 count += len(triplets)
                 triplets = []
     print(count)
 
 
 if __name__ == "__main__":
-    triplet_make ("dresses", num1 = 100, num2 = 100 )
+    triplet_make ("dresses", num1 = 5, num2 = 5 )
