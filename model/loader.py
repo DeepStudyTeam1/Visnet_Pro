@@ -20,6 +20,7 @@ class TripletImageLoader(torch.utils.data.Dataset):
             line = [str(x) + ".jpg" for x in line]
             triplets.append(line[0:3])
         self.triplets = triplets
+        print(len(triplets))
         self.transform = transform
         self.loader = loader
 

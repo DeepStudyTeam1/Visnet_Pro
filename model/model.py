@@ -9,7 +9,7 @@ from torch.autograd import Variable
 
 class Visnet_Pro(nn.Module):
     def __init__(self, light=False):
-        print("Create Visnet_Pro")
+        print("Create Visnet_Pro!")
         super(Visnet_Pro, self).__init__()
         self.layer1 = nn.Sequential(
             nn.MaxPool2d(kernel_size=5, stride=5, padding=1),  # (?,3,60,60)
@@ -62,14 +62,14 @@ class Visnet_Pro(nn.Module):
 
 
 class Tripletnet(nn.Module):
-    def __init__(self, embeddingnet):
+    def __init__(self, embeddingnet, margin = 1):
         super(Tripletnet, self).__init__()
         self.embeddingnet = embeddingnet
+        self.margin = margin
 
-    def forward(self, x, y, z):
-        embedded_x = self.embeddingnet(x)
-        embedded_y = self.embeddingnet(y)
-        embedded_z = self.embeddingnet(z)
-        dist_a = F.pairwise_distance(embedded_x, embedded_y, 2)
-        dist_b = F.pairwise_distance(embedded_x, embedded_z, 2)
-        return dist_a, dist_b, embedded_x, embedded_y, embedded_z
+    def forward(self, p, q, n):
+        embedded_p = self.embeddingnet(p)
+        embedded_q = self.embeddingnet(q)
+        embedded_n = self.embeddingnet(n)
+        loss = F.triplet_margin_loss(embedded_q,embedded_p,embedded_n, margin = self.margin)
+        return loss
