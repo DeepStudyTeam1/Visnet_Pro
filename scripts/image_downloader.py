@@ -9,7 +9,7 @@ import traceback
 
 __author__ = "ananya.h"
 base_dir = "C:/Users/cksdn/Downloads/visnet_mine/data/street2shop"
-
+print("1")
 
 class URLObject (object):
     def __init__ (self, id, url):
