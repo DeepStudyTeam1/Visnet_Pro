@@ -8,8 +8,13 @@ from io import BytesIO
 import traceback
 
 __author__ = "ananya.h"
+<<<<<<< HEAD
 base_dir = "J:/visnet_pro/data/street2shop"
 
+=======
+base_dir = "C:/Users/cksdn/Downloads/visnet_mine/data/street2shop"
+print("1")
+>>>>>>> 7ee2f72f8db0392b465953b19249b33919b06093
 
 class URLObject (object):
     def __init__ (self, id, url):
