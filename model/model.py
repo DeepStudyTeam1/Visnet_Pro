@@ -13,20 +13,20 @@ class Visnet_Pro(nn.Module):
         super(Visnet_Pro, self).__init__()
         self.layer1 = nn.Sequential(
             nn.MaxPool2d(kernel_size=5, stride=5, padding=1),  # (?,3,60,60)
-            nn.Conv2d(3, 128, kernel_size=6, stride=4, padding=1),  # (?,128,15,15)
+            nn.Conv2d(3, 64, kernel_size=6, stride=4, padding=1),  # (?,64,15,15)
             nn.ReLU(),
-            nn.BatchNorm2d(128),
-            nn.MaxPool2d(kernel_size=7, stride=4, padding=0),  # (?,128,3,3)
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(kernel_size=7, stride=4, padding=0),  # (?,64,3,3)
         )
         self.layer2 = nn.Sequential(
             nn.MaxPool2d(kernel_size=10, stride=10, padding=1),  # (?,3,30,30)
-            nn.Conv2d(3, 128, kernel_size=6, stride=4, padding=0),  # (?,128,7,7)
+            nn.Conv2d(3, 64, kernel_size=6, stride=4, padding=0),  # (?,64,7,7)
             nn.ReLU(),
-            nn.BatchNorm2d(128),
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=0),  # (?,128,3,3)
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(kernel_size=3, stride=2, padding=0),  # (?,64,3,3)
         )
 
-        self.bn1 = nn.BatchNorm1d(2304)
+        self.bn1 = nn.BatchNorm1d(1152)
 
         self.inception = torchvision.models.inception_v3(pretrained=True)
         for param in self.inception.parameters():
@@ -37,10 +37,10 @@ class Visnet_Pro(nn.Module):
             self.fc1 = nn.Linear(6400, 4096)
             self.bn3 = nn.BatchNorm1d(4096)
         else :
-            self.inception.fc = nn.Linear(2048, 2048)
-            self.bn2 = nn.BatchNorm1d(2048)
-            self.fc1 = nn.Linear(4352, 2048)
-            self.bn3 = nn.BatchNorm1d(2048)
+            self.inception.fc = nn.Linear(2048, 1024)
+            self.bn2 = nn.BatchNorm1d(1024)
+            self.fc1 = nn.Linear(2176, 1024)
+            self.bn3 = nn.BatchNorm1d(1024)
 
     def forward(self, x):
         out1 = self.layer1(x)  # (?, 128,3,3)

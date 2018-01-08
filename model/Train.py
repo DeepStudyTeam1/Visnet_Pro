@@ -19,12 +19,12 @@ def to_var(x):
         x = x.cuda()
     return Variable(x)
 
-    # parameter
 
+# parameter
+base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
-base_dir = "C:/Users/cksdn/Documents/GitHub/Visnet_Pro/data/street2shop"
 batch_size = 10
-epochs = 1
+epochs = 10
 learning_rate = 0.01
 
 # create network
@@ -45,6 +45,8 @@ grad_param = []
 for param in m2.parameters():
     if param.requires_grad == True:
         grad_param.append(param)
+        print(param.size())
+
 optimizer = torch.optim.Adam(grad_param, lr=learning_rate)
 
 cudnn.benchmark = True
@@ -63,7 +65,9 @@ for i in range(1, epochs + 1):
         optimizer.step()
 
         if (i + 1) % 1 == 0:
-            print('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f'
+            print('Epoch [%d/%d], Iter [%d/%d],  Loss: %.4f'
                   % (i , epochs, batch_idx, len(dataset) // batch_size, loss.data))
 
 print("train success!")
+
+torch.save(m2.state_dict(), 'm2.pkl')
