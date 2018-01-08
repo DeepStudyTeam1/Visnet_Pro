@@ -11,7 +11,7 @@ import traceback
 import random
 import csv
 
-base_dir = "C:/Users/cksdn/Downloads/fk-visual-search-master/data/street2shop"
+base_dir = "../data/street2shop"
 meta_dir = os.path.join (base_dir, "meta", "json")
 img_dir = os.path.join (base_dir, "images")
 structured_dir = os.path.join (base_dir, "structured_images")
