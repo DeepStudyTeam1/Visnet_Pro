@@ -1,8 +1,16 @@
 from loader import TripletImageLoader
 from model import Visnet_Pro, Tripletnet
-import numpy as np
+import argparse
+import os
+import shutil
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torchvision import datasets, transforms
 from torch.autograd import Variable
+import torch.backends.cudnn as cudnn
+import numpy as np
 
 
 def to_var(x):
@@ -11,18 +19,26 @@ def to_var(x):
         x = x.cuda()
     return Variable(x)
 
+
 def train():
-    m1 = Visnet_Pro(light = True)
+    base_dir = "C:/Users/cksdn/Documents/GitHub/Visnet_Pro/data/street2shop"
+    batch_size = 5
+
+    m1 = Visnet_Pro(light=True)
     m2 = Tripletnet(m1)
-    for param in m1.parameters():
-        if param.requires_grad == True:
-            print(param.size())
+    if torch.cuda.is_available():
+        m2 = m2.cuda()
 
-    test = torch.randn(2,3,299,299)
-    test = to_var(test)
-    out = m1(test)
-    print(out)
+    transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
+    dataset = TripletImageLoader(base_path=base_dir + "/images",
+                                 triplets_file_path=base_dir + "/triplet/dresses/triplets.csv",
+                                 transform=transform)
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
+    for batch_idx, (data1, data2, data3) in enumerate(train_loader):
+        data1 = to_var(data1)
+        data2 = to_var(data2)
+        data3 = to_var(data3)
 
 
 

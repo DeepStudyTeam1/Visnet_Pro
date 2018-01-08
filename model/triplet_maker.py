@@ -11,11 +11,11 @@ import traceback
 import random
 import csv
 
-base_dir = "../data/street2shop"
+base_dir = "C:/Users/cksdn/Documents/GitHub/Visnet_Pro/data/street2shop"
 meta_dir = os.path.join (base_dir, "meta", "json")
 img_dir = os.path.join (base_dir, "images")
 structured_dir = os.path.join (base_dir, "structured_images")
-url_file_path = base_dir + "/photo/photos.txt"
+url_file_path = base_dir + "/photos/photos.txt"
 failed_lists = set()
 
 def download_one_image (id):
@@ -97,8 +97,7 @@ def triplet_make (vertical, num1=5, num2=5, train=True, crop=True):
             with open (output_path + "/triplets.csv", "a+") as csvFile:
                 triplets = [[x[0], x[1], x[2], x[3]] for x in triplets]
                 for triplet in triplets:
-                    ",".join(triplet)
-                    print(triplet)
+                    triplet = ",".join(triplet) + "\n"
                     csvFile.write (triplet)
                 count += len(triplets)
                 triplets = []

@@ -43,33 +43,21 @@ class Visnet_Pro(nn.Module):
             self.bn3 = nn.BatchNorm1d(2048)
 
     def forward(self, x):
-        print(x.size())
         out1 = self.layer1(x)  # (?, 128,3,3)
-        print(out1.size())
         out1 = out1.view(out1.size(0), -1)  # (?, 1152)
-        print(out1.size())
         out2 = self.layer2(x)  # (?,128,3,3)
-        print(out2.size())
         out2 = out2.view(out2.size(0), -1)  # (?, 1152)
-        print(out2.size())
 
         cat1 = torch.cat((out1, out2), dim=1)  # (?,1152)
-        print(cat1.size())
         norm1 = self.bn1(cat1)
-        print(norm1.size())
 
         out3, _ = self.inception(x)
-        print(out3.size())
         norm2 = self.bn2(out3)
-        print(norm2.size())
 
         cat2 = torch.cat((norm1, norm2), dim=1)
-        print(cat2.size())
 
         fc1 = self.fc1(cat2)
-        print(fc1.size())
         out = self.bn3(fc1)
-        print(out.size())
         return out
 
 
