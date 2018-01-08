@@ -26,4 +26,6 @@ with open (url_file_path, 'r') as urlFile:
         print (url.split (".")[-1][:3])
         print (id)
 
+print("아앙아아아앙")
+print("나는 낭만고양이~~~~~예애")
 
