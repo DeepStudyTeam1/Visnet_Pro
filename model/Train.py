@@ -70,4 +70,4 @@ for i in range(1, epochs + 1):
 
 print("train success!")
 
-torch.save(m2.state_dict(), 'm2.pkl')
+torch.save(m2.state_dict(), base_dir + '/m2.pkl')
