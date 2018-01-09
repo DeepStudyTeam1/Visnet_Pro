@@ -1,16 +1,10 @@
 from loader import TripletImageLoader
 from model import Visnet_Pro, Tripletnet
-import argparse
 import os
-import shutil
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torchvision import datasets, transforms
+from torchvision import transforms
 from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
-import numpy as np
 
 
 def to_var(x):
@@ -24,11 +18,11 @@ def to_var(x):
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 batch_size = 10
-epochs = 10
+epochs = 3
 learning_rate = 0.01
 
 # create network
-m1 = Visnet_Pro(light=True)
+m1 = Visnet_Pro()
 m2 = Tripletnet(m1)
 if torch.cuda.is_available():
     m1 = m1.cuda()
@@ -45,7 +39,6 @@ grad_param = []
 for param in m2.parameters():
     if param.requires_grad == True:
         grad_param.append(param)
-        print(param.size())
 
 optimizer = torch.optim.Adam(grad_param, lr=learning_rate)
 
@@ -70,4 +63,4 @@ for i in range(1, epochs + 1):
 
 print("train success!")
 
-torch.save(m2.state_dict(), base_dir + '/m2.pkl')
+torch.save(m1.state_dict(), base_dir + '/m1.pkl')

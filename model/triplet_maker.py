@@ -1,15 +1,9 @@
 import os
-import glob
 import json
-import pickle
-import workerpool
-from urllib.parse import urlparse
 import requests
 from PIL import Image
 from io import BytesIO
-import traceback
 import random
-import csv
 
 base_dir = "C:/Users/cksdn/Documents/GitHub/Visnet_Pro/data/street2shop"
 meta_dir = os.path.join (base_dir, "meta", "json")

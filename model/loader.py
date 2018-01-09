@@ -1,9 +1,7 @@
 from PIL import Image
 import os
 import os.path
-
 import torch.utils.data
-import torchvision.transforms as transforms
 
 
 def default_image_loader(path):

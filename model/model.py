@@ -2,13 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import torchvision.datasets as dsets
-import torchvision.transforms as transforms
-from torch.autograd import Variable
 
 
 class Visnet_Pro(nn.Module):
-    def __init__(self, light=False):
+    def __init__(self, heavy=False):
         print("Create Visnet_Pro!")
         super(Visnet_Pro, self).__init__()
         self.layer1 = nn.Sequential(
@@ -31,7 +28,7 @@ class Visnet_Pro(nn.Module):
         self.inception = torchvision.models.inception_v3(pretrained=True)
         for param in self.inception.parameters():
             param.requires_grad = False
-        if light == False:
+        if heavy == True:
             self.inception.fc = nn.Linear(2048, 4096)
             self.bn2 = nn.BatchNorm1d(4096)
             self.fc1 = nn.Linear(6400, 4096)
@@ -62,14 +59,17 @@ class Visnet_Pro(nn.Module):
 
 
 class Tripletnet(nn.Module):
-    def __init__(self, embeddingnet, margin = 1):
+    def __init__(self, embeddingnet, margin = 1, rg_rate = 0.0001):
         super(Tripletnet, self).__init__()
         self.embeddingnet = embeddingnet
         self.margin = margin
+        self.rg_rate = rg_rate
 
     def forward(self, p, q, n):
         embedded_p = self.embeddingnet(p)
         embedded_q = self.embeddingnet(q)
         embedded_n = self.embeddingnet(n)
         loss = F.triplet_margin_loss(embedded_q,embedded_p,embedded_n, margin = self.margin)
+        print(loss)
+        loss = loss + self.rg_rate * (embedded_q.norm() + embedded_p.norm() + embedded_n.norm())
         return loss
