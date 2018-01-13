@@ -30,7 +30,7 @@ if torch.cuda.is_available():
 
 # create dataloader
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
-dataset = TripletImageLoader(base_path=base_dir + "/images",
+dataset = TripletImageLoader(image_path=base_dir + "/images",
                              triplets_file_path=base_dir + "/triplet/dresses/triplets.csv",
                              transform=transform)
 train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -63,4 +63,4 @@ for i in range(1, epochs + 1):
 
 print("train success!")
 
-torch.save(m1.state_dict(), base_dir + 'params.pkl')
+torch.save(m1.state_dict(), base_dir + '/params.pkl')

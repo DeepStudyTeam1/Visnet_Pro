@@ -1,7 +1,5 @@
 data
 .idea
 model/__pycache__
-model/model_tf.py
-model/params.pkl
-model/m2.pkl
+scripts/__pycache__
 *.pkl
