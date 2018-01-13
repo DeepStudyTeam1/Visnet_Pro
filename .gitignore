@@ -4,3 +4,4 @@ model/__pycache__
 model/model_tf.py
 model/params.pkl
 model/m2.pkl
+*.pkl

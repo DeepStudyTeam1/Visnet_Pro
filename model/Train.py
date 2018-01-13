@@ -63,4 +63,4 @@ for i in range(1, epochs + 1):
 
 print("train success!")
 
-torch.save(m1.state_dict(), base_dir + '/m1.pkl')
+torch.save(m1.state_dict(), base_dir + 'params.pkl')

@@ -9,9 +9,9 @@ def default_image_loader(path):
 
 
 class TripletImageLoader(torch.utils.data.Dataset):
-    def __init__(self, base_path, triplets_file_path, transform=None,
+    def __init__(self, image_path, triplets_file_path, transform=None,
                  loader=default_image_loader):
-        self.base_path = base_path
+        self.image_path = image_path
         triplets = []
         for line in open(triplets_file_path):
             line = line.split(",")
@@ -23,9 +23,9 @@ class TripletImageLoader(torch.utils.data.Dataset):
         print("Load dataset! length: " + str(len(triplets)))
 
     def __getitem__(self, index):
-        img1 = self.loader(os.path.join(self.base_path, self.triplets[index][0]))
-        img2 = self.loader(os.path.join(self.base_path, self.triplets[index][1]))
-        img3 = self.loader(os.path.join(self.base_path, self.triplets[index][2]))
+        img1 = self.loader(os.path.join(self.image_path, self.triplets[index][0]))
+        img2 = self.loader(os.path.join(self.image_path, self.triplets[index][1]))
+        img3 = self.loader(os.path.join(self.image_path, self.triplets[index][2]))
         if self.transform is not None:
             img1 = self.transform(img1)
             img2 = self.transform(img2)
@@ -58,3 +58,21 @@ class SingleImageLoader(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.singles)
+
+class ImageLoader(torch.utils.data.Dataset):
+    def __init__(self, image_path, transform=None,
+                 loader=default_image_loader):
+        self.base_path = image_path
+        images = os.path.listdir(image_path)
+        self.transform = transform
+        self.loader = loader
+        print("Load dataset! length: " + str(len(images)))
+
+    def __getitem__(self, index):
+        img = self.loader(os.path.join(self.base_path, self.images[index]))
+        if self.transform is not None:
+            img = self.transform(img)
+        return img
+
+    def __len__(self):
+        return len(self.images)
