@@ -23,8 +23,7 @@ loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=Tru
 for batch_idx, data in enumerate(loader):
     print(data.size())
     output = m1(data)
-    f_handle = file(filename, 'a')
-    numpy.save(f_handle, arr)
-    f_handle.close()
+    with open(file, 'a') as file:
+
 
 

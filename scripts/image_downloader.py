@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 import requests
 from PIL import Image
 from io import BytesIO
+import os
 import traceback
 
 
@@ -59,6 +60,8 @@ class ParallelImageDownloader (object):
 if __name__ == "__main__":
     url_file_path = base_dir + "/photos/photos.txt"
     dst_dir = base_dir + "/images"
+    if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
     images_downloaded = os.listdir (dst_dir)
     ids_downloaded = set ([x.split (".")[0] for x in images_downloaded])
     with open (url_file_path, 'r') as urlFile:
