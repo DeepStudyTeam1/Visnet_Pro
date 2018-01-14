@@ -13,7 +13,7 @@ def to_var(x):
     return Variable(x)
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
-batch_size = 10
+batch_size = 100
 
 m1 = Visnet_Pro()
 m1.load_state_dict(torch.load(base_dir + '/params.pkl'))
@@ -26,19 +26,17 @@ file_path = base_dir + "/feature"
 if not os.path.exists(file_path):
     os.mkdir(file_path)
 
-path = base_dir + "/image_lists/belts_train.txt"
-vertical = path.split("_")[0]
-dataset = SingleImageLoader(base_dir + "/images", path, transform=transform)
-loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+for path in all_pair_file_paths:
+    vertical = os.path.split (path)[-1].split ("_")[0]
+    dataset = SingleImageLoader (base_dir + "/images", path, transform=transform)
+    loader = torch.utils.data.DataLoader (dataset, batch_size=batch_size, shuffle=True)
 
+    output = []
 
-output = []
+    for batch_idx, data in enumerate (loader):
+        output.append (m1 (to_var (data)))
 
-for batch_idx, data in enumerate(loader):
-    print(data.size())
-    output.append (m1(to_var(data)))
-
-torch.save(output, file_path+ "/" + vertical + ".pkl")
+    torch.save (output, file_path + "/" + vertical + ".pkl")
 
 
 
