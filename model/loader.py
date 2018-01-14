@@ -20,7 +20,6 @@ class TripletImage(torch.utils.data.Dataset):
         print("Load dataset! length: " + str(len(self.triplets)))
 
     def __getitem__(self, index):
-        print(self.triplets[index])
         img1 = self.loader(self.image_path + "/" + str(self.triplets[index][0]) + ".jpg")
         img2 = self.loader(self.image_path + "/" + str(self.triplets[index][1]) + ".jpg")
         img3 = self.loader(self.image_path + "/" + str(self.triplets[index][2]) + ".jpg")
