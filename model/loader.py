@@ -2,21 +2,18 @@ from PIL import Image
 import os
 import os.path
 import torch.utils.data
+import pickle
 
 
 def default_image_loader(path):
     return Image.open(path).convert('RGB')
 
 
-class TripletImageLoader(torch.utils.data.Dataset):
+class TripletImage(torch.utils.data.Dataset):
     def __init__(self, image_path, triplets_file_path, transform=None,
                  loader=default_image_loader):
         self.image_path = image_path
-        triplets = []
-        for line in open(triplets_file_path):
-            line = line.split(",")
-            line = [str(x) + ".jpg" for x in line]
-            triplets.append(line[0:3])
+        triplets = pickle.load(triplets_file_path)
         self.triplets = triplets
         self.transform = transform
         self.loader = loader
@@ -36,15 +33,11 @@ class TripletImageLoader(torch.utils.data.Dataset):
         return len(self.triplets)
 
 
-class SingleImageLoader(torch.utils.data.Dataset):
+class SingleImage(torch.utils.data.Dataset):
     def __init__(self, base_path, single_file_path, transform=None,
                  loader=default_image_loader):
         self.base_path = base_path
-        singles = []
-        for line in open(single_file_path):
-            line = line.split(",")
-            line = [str(x) + ".jpg" for x in line]
-            singles.append(line[0])
+        singles = pickle.load(single_file_path)
         self.singles = singles
         self.transform = transform
         self.loader = loader
@@ -59,7 +52,7 @@ class SingleImageLoader(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.singles)
 
-class ImageLoader(torch.utils.data.Dataset):
+class Images(torch.utils.data.Dataset):
     def __init__(self, image_path, transform=None,
                  loader=default_image_loader):
         self.base_path = image_path

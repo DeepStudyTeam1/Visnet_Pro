@@ -1,4 +1,4 @@
-from loader import TripletImageLoader
+from loader import TripletImage
 from model import Visnet_Pro, Tripletnet
 import os
 import torch
@@ -30,8 +30,8 @@ if torch.cuda.is_available():
 
 # create dataloader
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
-dataset = TripletImageLoader(image_path=base_dir + "/images",
-                             triplets_file_path=base_dir + "/triplet/dresses/triplets.csv",
+dataset = TripletImage(image_path=base_dir + "/images",
+                             triplets_file_path=base_dir + "/triplet/dresses.pkl",
                              transform=transform)
 train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 

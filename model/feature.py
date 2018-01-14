@@ -1,10 +1,11 @@
 from model import Visnet_Pro
-from loader import SingleImageLoader
+from loader import SingleImage
 from torchvision import transforms
 from torch.autograd import Variable
 import os
 import torch
 import glob
+import pickle
 
 def to_var(x):
     """Convert tensor to variable."""
@@ -20,7 +21,7 @@ m1.load_state_dict(torch.load(base_dir + '/params.pkl'))
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
-all_pair_file_paths = glob.glob(base_dir + "/image_lists/*_retrieval.txt")
+all_pair_file_paths = glob.glob(base_dir + "/image_lists/*_retrieval.pkl")
 
 file_path = base_dir + "/feature"
 if not os.path.exists(file_path):
@@ -28,7 +29,7 @@ if not os.path.exists(file_path):
 
 for path in all_pair_file_paths:
     vertical = os.path.split (path)[-1].split ("_")[0]
-    dataset = SingleImageLoader (base_dir + "/images", path, transform=transform)
+    dataset = SingleImage (base_dir + "/images", path, transform=transform)
     loader = torch.utils.data.DataLoader (dataset, batch_size=batch_size, shuffle=True)
 
     output = []
