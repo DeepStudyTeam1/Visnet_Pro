@@ -25,6 +25,7 @@ for path in query_files:
         query_path = os.path.join(query_dir, str(query_id)+".jpg")
         if not os.path.exists(query_path):
             continue
+
         img = cv2.imread(query_path, cv2.IMREAD_COLOR)
         x, w, y, h = int(bbox["left"]), int(bbox["width"]), int(bbox["top"]), int(bbox["height"])
         crop_img = img[y:y+h, x:x+w]
