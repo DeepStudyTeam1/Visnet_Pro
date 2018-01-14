@@ -13,7 +13,7 @@ def sample(verticals):
     triplet_dir = os.path.join(base_dir, "triplet")
     if not os.path.exists(triplet_dir):
         os.mkdir(triplet_dir)
-    number_of_n = 100
+    number_of_n = 3
     for vertical in verticals:
         with open(os.path.join(file_dir, vertical + "_retrieval.pkl"), 'rb') as f:
             universe = pickle.load(f)
@@ -21,23 +21,30 @@ def sample(verticals):
             q_to_p_map = pickle.load(f)
         triplets = []
         for query in q_to_p_map:
-            if query == "None":
+            if q_to_p_map[query] == "None":
                 continue
-            triplet = [query]
             for pos in q_to_p_map[query]:
-                triplet.append(pos)
+                temp = [query]
+                temp.append(pos)
                 for i in range(number_of_n):
                     neg = random.randint(0, len(universe)-1)
                     neg = universe[neg]
-                    if neg is not q_to_p_map[query]:
+                    triplet = list(temp)
+                    if neg not in q_to_p_map[query]:
                         triplet.append(neg)
-            triplets.append(triplet)
+                        triplets.append(triplet)
         with open(triplet_dir + "/" + vertical + ".pkl", "wb") as f:
             pickle.dump(triplets, f)
-        print("Complete making triplets of " + vertical)
+        print("Complete making triplets of " + vertical + " " + str(len(triplets)))
 
 
 
 
 if __name__ == "__main__":
-    sample(["dresses"])
+    all_file_paths = glob.glob(base_dir + "/meta/json/retrieval_*.json")
+    verticals = []
+    for path in all_file_paths:
+        vertical = os.path.split(path)[-1].split(".")[0].split("_")[-1]
+        verticals.append(vertical)
+    print(verticals)
+    sample(verticals)

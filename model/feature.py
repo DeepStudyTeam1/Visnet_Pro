@@ -21,13 +21,13 @@ m1.load_state_dict(torch.load(base_dir + '/params.pkl'))
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
-all_pair_file_paths = glob.glob(base_dir + "/image_lists/*_retrieval.pkl")
+all_file_paths = glob.glob(base_dir + "/image_lists/*_retrieval.pkl")
 
 file_path = base_dir + "/feature"
 if not os.path.exists(file_path):
     os.mkdir(file_path)
 
-for path in all_pair_file_paths:
+for path in all_file_paths:
     vertical = os.path.split (path)[-1].split ("_")[0]
     dataset = SingleImage (base_dir + "/images", path, transform=transform)
     loader = torch.utils.data.DataLoader (dataset, batch_size=batch_size, shuffle=True)

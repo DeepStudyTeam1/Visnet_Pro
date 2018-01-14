@@ -13,16 +13,17 @@ class TripletImage(torch.utils.data.Dataset):
     def __init__(self, image_path, triplets_file_path, transform=None,
                  loader=default_image_loader):
         self.image_path = image_path
-        triplets = pickle.load(triplets_file_path)
-        self.triplets = triplets
+        with open(triplets_file_path, 'rb') as f:
+            self.triplets = pickle.load(f)
         self.transform = transform
         self.loader = loader
-        print("Load dataset! length: " + str(len(triplets)))
+        print("Load dataset! length: " + str(len(self.triplets)))
 
     def __getitem__(self, index):
-        img1 = self.loader(os.path.join(self.image_path, self.triplets[index][0]))
-        img2 = self.loader(os.path.join(self.image_path, self.triplets[index][1]))
-        img3 = self.loader(os.path.join(self.image_path, self.triplets[index][2]))
+        print(self.triplets[index])
+        img1 = self.loader(self.image_path + "/" + str(self.triplets[index][0]) + ".jpg")
+        img2 = self.loader(self.image_path + "/" + str(self.triplets[index][1]) + ".jpg")
+        img3 = self.loader(self.image_path + "/" + str(self.triplets[index][2]) + ".jpg")
         if self.transform is not None:
             img1 = self.transform(img1)
             img2 = self.transform(img2)
@@ -34,17 +35,17 @@ class TripletImage(torch.utils.data.Dataset):
 
 
 class SingleImage(torch.utils.data.Dataset):
-    def __init__(self, base_path, single_file_path, transform=None,
+    def __init__(self, image_path, single_file_path, transform=None,
                  loader=default_image_loader):
-        self.base_path = base_path
-        singles = pickle.load(single_file_path)
-        self.singles = singles
+        self.image_path = image_path
+        with open(single_file_path, 'rb') as f:
+            self.singles = pickle.load(f)
         self.transform = transform
         self.loader = loader
-        print("Load dataset! length: " + str(len(singles)))
+        print("Load dataset! length: " + str(len(self.singles)))
 
     def __getitem__(self, index):
-        img = self.loader(os.path.join(self.base_path, self.singles[index]))
+        img = self.loader(self.image_path + "/" + str(self.singles[index][0]) + ".jpg")
         if self.transform is not None:
             img = self.transform(img)
         return img

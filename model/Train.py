@@ -13,11 +13,12 @@ def to_var(x):
         x = x.cuda()
     return Variable(x)
 
+vertical = "tops"
 
 # parameter
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
-batch_size = 10
+batch_size = 100
 epochs = 3
 learning_rate = 0.01
 
@@ -31,7 +32,7 @@ if torch.cuda.is_available():
 # create dataloader
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 dataset = TripletImage(image_path=base_dir + "/images",
-                             triplets_file_path=base_dir + "/triplet/dresses.pkl",
+                             triplets_file_path=base_dir + "/triplet/" + vertical + ".pkl",
                              transform=transform)
 train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
@@ -57,10 +58,8 @@ for i in range(1, epochs + 1):
         loss.backward()
         optimizer.step()
 
-        if (i + 1) % 1 == 0:
+        if i % 1 == 0:
             print('Epoch [%d/%d], Iter [%d/%d],  Loss: %.4f'
                   % (i , epochs, batch_idx, len(dataset) // batch_size, loss.data))
-
+    torch.save(m1.state_dict(), base_dir + '/params_' + vertical + '.pkl')
 print("train success!")
-
-torch.save(m1.state_dict(), base_dir + '/params.pkl')

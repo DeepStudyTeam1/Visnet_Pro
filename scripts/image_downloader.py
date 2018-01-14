@@ -77,5 +77,5 @@ if __name__ == "__main__":
     print ("Commencing downloads for " + str (len (url_objects)) + " urls")
     downloader = ParallelImageDownloader (25, dst_dir)
     errors = downloader.download_batch (url_objects)
-    with open (base_dir + "/tmp/errors.pkl", "wb") as pklFile:
+    with open (base_dir + "/errors.pkl", "wb") as pklFile:
         pickle.dump (errors, pklFile)
