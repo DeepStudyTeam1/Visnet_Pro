@@ -70,6 +70,5 @@ class Tripletnet(nn.Module):
         embedded_q = self.embeddingnet(q)
         embedded_n = self.embeddingnet(n)
         loss = F.triplet_margin_loss(embedded_q,embedded_p,embedded_n, margin = self.margin)
-        print(loss)
         loss = loss + self.rg_rate * (embedded_q.norm() + embedded_p.norm() + embedded_n.norm())
         return loss

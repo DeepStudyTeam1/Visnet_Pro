@@ -41,7 +41,6 @@ class ParallelImageDownloader (object):
                 print(urlObj.id)
                 if os.path.exists(self.destination_path + "/" + urlObj.id + ".jpg"):
                     os.remove(self.destination_path + "/" + urlObj.id + ".jpg")
-                # traceback.print_exc()
                 return [-1, urlObj]
         else:
             return None
