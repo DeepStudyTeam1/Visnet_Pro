@@ -8,13 +8,17 @@ import pickle
 def default_image_loader(path):
     return Image.open(path).convert('RGB')
 
+base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 class TripletImage(torch.utils.data.Dataset):
-    def __init__(self, image_path, triplets_file_path, transform=None,
+    def __init__(self, image_path, verticals, transform=None,
                  loader=default_image_loader):
         self.image_path = image_path
-        with open(triplets_file_path, 'rb') as f:
-            self.triplets = pickle.load(f)
+        self.triplets = []
+        for vertical in verticals:
+            triplets_file_path = base_dir + "/triplet/" + vertical + ".pkl"
+            with open (triplets_file_path, 'rb') as f:
+                self.triplets.extend(pickle.load (f))
         self.transform = transform
         self.loader = loader
         print("Load dataset! length: " + str(len(self.triplets)))
