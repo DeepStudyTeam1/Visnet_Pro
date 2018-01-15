@@ -46,7 +46,7 @@ optimizer = torch.optim.Adam(grad_param, lr=learning_rate)
 cudnn.benchmark = True
 
 # train start
-for i in range(1, epochs + 1):
+for i in range(epochs):
     for batch_idx, (data1, data2, data3) in enumerate(train_loader):
         data1 = to_var(data1)
         data2 = to_var(data2)
@@ -58,8 +58,9 @@ for i in range(1, epochs + 1):
         loss.backward()
         optimizer.step()
 
-        if i % 1 == 0:
+        if batch_idx % 1 == 0:
             print('Epoch [%d/%d], Iter [%d/%d],  Loss: %.4f'
                   % (i , epochs, batch_idx, len(dataset) // batch_size, loss.data))
-    torch.save(m1.state_dict(), base_dir + '/params_' + vertical + '.pkl')
+        if batch_idx % 20 == 0:
+            torch.save(m1.state_dict(), base_dir + '/params_' + vertical + "_" + str(i) + "_" + str(batch_idx) +'.pkl')
 print("train success!")
