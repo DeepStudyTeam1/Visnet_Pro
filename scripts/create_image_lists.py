@@ -45,7 +45,7 @@ for path in all_pair_file_paths:
     with open(os.path.join(meta_dir, train_file)) as jsonFile:
         data = json.load(jsonFile)
     for info in data:
-        img_path = os.path.join(image_dir, str(info["photo"]) + ".jpg")
+        img_path = os.path.join(image_dir, "crop_" + str(info["photo"]) + ".jpg")
         if os.path.exists(img_path):
             train_photo_to_product_map[info["photo"]] = info["product"]
 
@@ -67,7 +67,7 @@ for path in all_pair_file_paths:
     with open(os.path.join(meta_dir, test_file)) as jsonFile:
         data = json.load(jsonFile)
     for info in data:
-        img_path = os.path.join(image_dir, str(info["photo"]) + ".jpg")
+        img_path = os.path.join(image_dir, "crop_" + str(info["photo"]) + ".jpg")
         if os.path.exists(img_path):
             test_photo_to_product_map[info["photo"]] = info["product"]
 

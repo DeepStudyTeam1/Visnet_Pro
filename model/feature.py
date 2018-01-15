@@ -13,10 +13,13 @@ def to_var(x):
     return Variable(x)
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
-batch_size = 100
+batch_size = 10
 
 m1 = Visnet_Pro()
-m1.load_state_dict(torch.load(base_dir + '/params.pkl'))
+if torch.cuda.is_available():
+    m1 = m1.cuda()
+
+m1.load_state_dict(torch.load(base_dir + '/params_skirts_0.pkl'))
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
@@ -35,9 +38,11 @@ def feature(vertical):
 
     for batch_idx, data in enumerate (loader):
         output.append (m1 (to_var (data)))
+        if batch_idx % 10 == 0:
+            print("Making features [%d/%d]" %(batch_idx, len(loader)))
 
     torch.save (output, file_path + "/" + vertical + ".pkl")
 
-feature("dresses")
+feature("tops")
 
 

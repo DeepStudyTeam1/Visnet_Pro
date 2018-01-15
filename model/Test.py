@@ -11,6 +11,8 @@ base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
 m1 = Visnet_Pro()
+if torch.cuda.is_available():
+    m1 = m1.cuda()
 m1.load_state_dict(torch.load('params.pkl'))
 
 def show_image(predictions):

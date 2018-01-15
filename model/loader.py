@@ -20,7 +20,7 @@ class TripletImage(torch.utils.data.Dataset):
         print("Load dataset! length: " + str(len(self.triplets)))
 
     def __getitem__(self, index):
-        img1 = self.loader(self.image_path + "/" + str(self.triplets[index][0]) + ".jpg")
+        img1 = self.loader(self.image_path + "/crop_" + str(self.triplets[index][0]) + ".jpg")
         img2 = self.loader(self.image_path + "/" + str(self.triplets[index][1]) + ".jpg")
         img3 = self.loader(self.image_path + "/" + str(self.triplets[index][2]) + ".jpg")
         if self.transform is not None:
@@ -44,7 +44,7 @@ class SingleImage(torch.utils.data.Dataset):
         print("Load dataset! length: " + str(len(self.singles)))
 
     def __getitem__(self, index):
-        img = self.loader(self.image_path + "/" + str(self.singles[index][0]) + ".jpg")
+        img = self.loader(self.image_path + "/" + str(self.singles[index]) + ".jpg")
         if self.transform is not None:
             img = self.transform(img)
         return img

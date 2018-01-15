@@ -11,6 +11,7 @@ def sample(verticals, number_of_n = 3):
     triplet_dir = os.path.join(base_dir, "triplet")
     if not os.path.exists(triplet_dir):
         os.mkdir(triplet_dir)
+    count = 0
     for vertical in verticals:
         with open(os.path.join(file_dir, vertical + "_retrieval.pkl"), 'rb') as f:
             universe = pickle.load(f)
@@ -32,16 +33,15 @@ def sample(verticals, number_of_n = 3):
                         triplets.append(triplet)
         with open(triplet_dir + "/" + vertical + ".pkl", "wb") as f:
             pickle.dump(triplets, f)
+        count += len(triplets)
         print("Complete making triplets of " + vertical + " " + str(len(triplets)))
+    print("Complete making tripkets " + str(count))
 
 
 
 
 if __name__ == "__main__":
-    all_file_paths = glob.glob(base_dir + "/meta/json/retrieval_*.json")
-    verticals = []
-    for path in all_file_paths:
-        vertical = os.path.split(path)[-1].split(".")[0].split("_")[-1]
-        verticals.append(vertical)
-    print(verticals)
-    sample(verticals)
+    sample(["dresses"],6)
+    sample(["outerwear"], 31)
+    sample(["tops"], 17)
+    sample(["skirts"], 28)
