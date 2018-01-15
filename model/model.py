@@ -65,7 +65,7 @@ class Visnet_Pro(nn.Module):
 
 
 class Tripletnet(nn.Module):
-    def __init__(self, embeddingnet, margin = 1, rg_rate = 0.0001):
+    def __init__(self, embeddingnet, margin = 1, rg_rate = 0.00005):
         super(Tripletnet, self).__init__()
         self.embeddingnet = embeddingnet
         self.margin = margin

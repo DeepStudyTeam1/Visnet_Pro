@@ -64,4 +64,5 @@ for i in range (epochs):
         if batch_idx % 500 == 0:
             torch.save (m1.state_dict (),
                         base_dir + '/params_' + str (i) + "_" + str (batch_idx) + '.pkl')
+torch.save (m1.state_dict (),base_dir + '/params_final.pkl')
 print ("train success")
