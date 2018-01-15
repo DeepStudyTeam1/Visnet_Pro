@@ -5,7 +5,6 @@ from torch.autograd import Variable
 import os
 import torch
 import glob
-import pickle
 
 def to_var(x):
     """Convert tensor to variable."""
@@ -27,8 +26,8 @@ file_path = base_dir + "/feature"
 if not os.path.exists(file_path):
     os.mkdir(file_path)
 
-for path in all_file_paths:
-    vertical = os.path.split (path)[-1].split ("_")[0]
+def feature(vertical):
+    path = base_dir + "/image_lists/" + vertical + "_retrieval.pkl"
     dataset = SingleImage (base_dir + "/images", path, transform=transform)
     loader = torch.utils.data.DataLoader (dataset, batch_size=batch_size, shuffle=True)
 
@@ -39,5 +38,6 @@ for path in all_file_paths:
 
     torch.save (output, file_path + "/" + vertical + ".pkl")
 
+feature("dresses")
 
 
