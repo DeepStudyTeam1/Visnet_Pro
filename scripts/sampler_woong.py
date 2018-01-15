@@ -1,19 +1,16 @@
 import glob
-import json
 import random
-import csv
 import os
 import pickle
 
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
-def sample(verticals):
+def sample(verticals, number_of_n = 3):
     file_dir = os.path.join(base_dir, "image_lists")
     triplet_dir = os.path.join(base_dir, "triplet")
     if not os.path.exists(triplet_dir):
         os.mkdir(triplet_dir)
-    number_of_n = 3
     for vertical in verticals:
         with open(os.path.join(file_dir, vertical + "_retrieval.pkl"), 'rb') as f:
             universe = pickle.load(f)
