@@ -3,6 +3,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 
+class LRN(nn.Module):
+    def __init__ (self):
+        super (LRN, self).__init__ ()
+    def forward (self, x):
+        div = x.pow (2)
+        div = div.sum(1, keepdim = True)
+        div = div.expand(x.size())
+        div = div.add (1.0).pow (0.5)
+        x = x.div(div)
+        return x
 
 class Visnet_Pro(nn.Module):
     def __init__(self, heavy=False):
@@ -23,21 +33,21 @@ class Visnet_Pro(nn.Module):
             nn.MaxPool2d(kernel_size=3, stride=2, padding=0),  # (?,64,3,3)
         )
 
-        self.bn1 = nn.BatchNorm1d(1152)
+        self.bn1 = LRN()
 
         self.inception = torchvision.models.inception_v3(pretrained=True)
         for param in self.inception.parameters():
             param.requires_grad = False
         if heavy == True:
             self.inception.fc = nn.Linear(2048, 4096)
-            self.bn2 = nn.BatchNorm1d(4096)
+            self.bn2 = LRN()
             self.fc1 = nn.Linear(6400, 4096)
-            self.bn3 = nn.BatchNorm1d(4096)
+            self.bn3 = LRN()
         else :
             self.inception.fc = nn.Linear(2048, 1024)
-            self.bn2 = nn.BatchNorm1d(1024)
+            self.bn2 = LRN()
             self.fc1 = nn.Linear(2176, 1024)
-            self.bn3 = nn.BatchNorm1d(1024)
+            self.bn3 = LRN()
 
     def forward(self, x):
         out1 = self.layer1(x)  # (?, 128,3,3)

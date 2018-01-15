@@ -21,7 +21,11 @@ if torch.cuda.is_available():
     params = torch.load (base_dir + '/params_skirts_0.pkl')
 else:
     params = torch.load (base_dir + '/params_skirts_0.pkl', map_location=lambda storage, loc: storage)
+
 m1.load_state_dict(params)
+
+for param in m1.parameters():
+    if param.requires_grad == False:
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 

@@ -2,18 +2,31 @@ import os
 from model import Visnet_Pro
 from PIL import Image
 from torchvision import transforms
+from torch.autograd import Variable
 import torch
 from sklearn.neighbors import NearestNeighbors
 import pickle
+
+
+def to_var(x):
+    """Convert tensor to variable."""
+    if torch.cuda.is_available():
+        x = x.cuda()
+    return Variable(x)
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
-m1 = Visnet_Pro()
-if torch.cuda.is_available():
-    m1 = m1.cuda()
-m1.load_state_dict(torch.load('params.pkl'))
+m1 = Visnet_Pro ()
+
+if torch.cuda.is_available ():
+    m1 = m1.cuda ()
+    params = torch.load (base_dir + '/params_skirts_0.pkl')
+else:
+    params = torch.load (base_dir + '/params_skirts_0.pkl', map_location=lambda storage, loc: storage)
+
+m1.load_state_dict(params)
 
 def show_image(predictions):
     for i in predictions:
@@ -28,7 +41,7 @@ def test(img_id, vertical):
 
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
-    feature = m1(img)
+    feature = m1(to_var(img.view(-1,3,299,299)))
 
     file_path = base_dir + "/feature/" + vertical + ".pkl"
     feature_all = torch.load(file_path)
@@ -49,3 +62,5 @@ def test(img_id, vertical):
             count += 1.0
 
     print("Acc : %.3f" %(count / len(q_to_p_map)))
+
+test(9600,"tops")
