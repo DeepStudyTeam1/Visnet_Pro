@@ -18,8 +18,10 @@ batch_size = 10
 m1 = Visnet_Pro()
 if torch.cuda.is_available():
     m1 = m1.cuda()
-
-m1.load_state_dict(torch.load(base_dir + '/params_skirts_0.pkl'))
+    params = torch.load (base_dir + '/params_skirts_0.pkl')
+else:
+    params = torch.load (base_dir + '/params_skirts_0.pkl', map_location=lambda storage, loc: storage)
+m1.load_state_dict(params)
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
