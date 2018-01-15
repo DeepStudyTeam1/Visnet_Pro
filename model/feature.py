@@ -24,8 +24,6 @@ else:
 
 m1.load_state_dict(params)
 
-for param in m1.parameters():
-    if param.requires_grad == False:
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
