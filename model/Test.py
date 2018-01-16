@@ -22,9 +22,9 @@ m1 = Visnet_Pro ()
 
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
-    params = torch.load (base_dir + '/params_0_500.pkl')
+    params = torch.load (base_dir + '/params_0_4000.pkl')
 else:
-    params = torch.load (base_dir + '/params_0_500.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_0_4000.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
@@ -34,11 +34,11 @@ def show_image(predictions):
         path = base_dir + "/images/" + str(i) + ".jpg"
         Image.open(path).show()
 
-def test(img_id, vertical, topk = 10):
+def test(img_id, vertical, topk = 5):
 
     show_image([img_id])
 
-    img_path = base_dir + "/images/"+ str(img_id) + ".jpg"
+    img_path = base_dir + "/images/crop_"+ str(img_id) + ".jpg"
 
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
@@ -63,12 +63,14 @@ def test(img_id, vertical, topk = 10):
     with open(base_dir + "/image_lists/" + vertical + "_test.pkl", 'rb') as f:
         q_to_p_map = pickle.load(f)
 
+    print(q_to_p_map[img_id])
+
     count = 0
 
     for i in top_id:
-        if i in q_to_p_map[img_id]:
+        if i is q_to_p_map[img_id]:
             count += 1.0
 
     print("Acc : %.3f" %(count / len(q_to_p_map)))
 
-test(2337,"tops")
+test(7094,"tops")
