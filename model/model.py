@@ -65,16 +65,14 @@ class Visnet_Pro(nn.Module):
 
 
 class Tripletnet(nn.Module):
-    def __init__(self, embeddingnet, margin = 1, rg_rate = 0.00005):
+    def __init__(self, embeddingnet, margin = 1):
         super(Tripletnet, self).__init__()
         self.embeddingnet = embeddingnet
         self.margin = margin
-        self.rg_rate = rg_rate
 
     def forward(self, p, q, n):
         embedded_p = self.embeddingnet(p)
         embedded_q = self.embeddingnet(q)
         embedded_n = self.embeddingnet(n)
         loss = F.triplet_margin_loss(embedded_q,embedded_p,embedded_n, margin = self.margin)
-        loss = loss + self.rg_rate * (embedded_q.norm() + embedded_p.norm() + embedded_n.norm())
         return loss
