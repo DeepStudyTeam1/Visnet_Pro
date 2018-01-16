@@ -18,9 +18,9 @@ batch_size = 10
 m1 = Visnet_Pro()
 if torch.cuda.is_available():
     m1 = m1.cuda()
-    params = torch.load (base_dir + '/params_0_500.pkl')
+    params = torch.load (base_dir + '/params_0_4000.pkl')
 else:
-    params = torch.load (base_dir + '/params_0_500.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_0_4000.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
@@ -49,6 +49,6 @@ def feature(verticals):
 
        torch.save(output, file_path + "/" + vertical + ".pkl")
 
-feature(["tops"])
+feature(["tops", "dresses", "outerwear", "skirts"])
 
 
