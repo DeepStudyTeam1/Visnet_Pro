@@ -28,7 +28,7 @@ class ParallelImageDownloader (object):
     def download_image (self, urlObj):
         if self.is_url (urlObj.url):
             try:
-                r = requests.get (urlObj.url, timeout = 1)
+                r = requests.get (urlObj.url, timeout = 5)
                 if r.status_code == 200:
                     i = Image.open (BytesIO (r.content))
                     i.save (self.destination_path + "/" + urlObj.id + ".jpg")
@@ -36,6 +36,7 @@ class ParallelImageDownloader (object):
                     return [r.status_code, urlObj]
             except:
                 print("Download failed!!!")
+                print(urlObj.url)
                 print(urlObj.url.split (".")[-1][:3])
                 print(urlObj.id)
                 if os.path.exists(self.destination_path + "/" + urlObj.id + ".jpg"):
@@ -56,20 +57,20 @@ class ParallelImageDownloader (object):
 
 
 if __name__ == "__main__":
-    url_file_path = base_dir + "/photos/photos.txt"
+    url_file_path = base_dir + "/item.pkl"
     dst_dir = base_dir + "/images"
     if not os.path.exists(dst_dir):
         os.mkdir(dst_dir)
     images_downloaded = os.listdir (dst_dir)
     ids_downloaded = set ([x.split (".")[0] for x in images_downloaded])
-    with open (url_file_path, 'r') as urlFile:
-        lines = urlFile.readlines ()
-        lines = [x.strip () for x in lines]
-        lines = [x.split (";")[:2] for x in lines]
+    with open (url_file_path, 'rb') as f:
+        lines = pickle.load(f)
     url_objects = {}
     for line in lines:
-        img_id, url = line
-        img_id = str (int (img_id))
+        img_id = line[0]
+        url = line[1]
+        print(img_id)
+        print(url)
         if img_id not in ids_downloaded:
             url_objects[img_id] = URLObject (img_id, url)  # Done to remove duplicates
     url_objects = url_objects.values ()

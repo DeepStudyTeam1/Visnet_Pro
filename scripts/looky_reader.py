@@ -5,7 +5,7 @@ base_dir = os.path.split (os.getcwd ())[0] + "/data/looky"
 item_path = base_dir + "/item.csv"
 image_dir = base_dir + "/images"
 
-if os.path.exists (image_dir):
+if not os.path.exists (image_dir):
     os.mkdir (image_dir)
 
 with open (item_path, 'r', encoding='UTF8') as f:
@@ -74,5 +74,13 @@ with open(base_dir + "/item.pkl", 'rb') as f:
 print("!!!")
 print(new[0])
 
+dict4 = {}
+for line in lines:
+    line = line.replace ('"', "").split (";")
+    if line[4] not in dict4.keys ():
+        dict4[line[4]] = 1
+    else:
+        dict4[line[4]] += 1
+print(dict4)
 
 
