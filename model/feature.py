@@ -18,9 +18,9 @@ batch_size = 10
 m1 = Visnet_Pro()
 if torch.cuda.is_available():
     m1 = m1.cuda()
-    params = torch.load (base_dir + '/params_0_4000.pkl')
+    params = torch.load (base_dir + '/params_final.pkl')
 else:
-    params = torch.load (base_dir + '/params_0_4000.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_final.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
@@ -40,6 +40,9 @@ def feature(verticals):
        loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
        output = torch.Tensor(0,0)
+
+       if torch.cuda.is_available():
+           output = output.cuda()
 
        for batch_idx, data in enumerate(loader):
            out = m1(to_var(data)).data
