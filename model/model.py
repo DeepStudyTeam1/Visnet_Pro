@@ -7,7 +7,7 @@ class LRN(nn.Module):
     def __init__ (self):
         super (LRN, self).__init__ ()
     def forward (self, x):
-        div = x.pow (2)
+        div = x.pow(2)
         div = div.sum(1, keepdim = True)
         div = div.expand(x.size())
         div = div.add (1.0).pow (0.5)
@@ -54,7 +54,10 @@ class Visnet_Pro(nn.Module):
         cat1 = torch.cat((out1, out2), dim=1)  # (?,1152)
         norm1 = self.lrn(cat1)
 
-        out3, _ = self.inception(x)
+        if self.train ==True:
+            out3, _ = self.inception(x)
+        else:
+            out3 = self.inception(x)
         norm2 = self.lrn(out3)
 
         cat2 = torch.cat((norm1, norm2), dim=1)

@@ -4,7 +4,7 @@ from PIL import Image
 from torchvision import transforms
 from torch.autograd import Variable
 import torch
-from sklearn.neighbors import NearestNeighbors
+import numpy as np
 import pickle
 
 
@@ -22,11 +22,12 @@ m1 = Visnet_Pro ()
 
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
-    params = torch.load (base_dir + '/params_skirts_0.pkl')
+    params = torch.load (base_dir + '/params_0_500.pkl')
 else:
-    params = torch.load (base_dir + '/params_skirts_0.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_0_500.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
+m1.eval()
 
 def show_image(predictions):
     for i in predictions:
@@ -35,7 +36,7 @@ def show_image(predictions):
 
 def test(img_id, vertical):
 
-    show_image([img_id])
+    #show_image([img_id])
 
     img_path = base_dir + "/images/"+ str(img_id) + ".jpg"
 
@@ -45,12 +46,20 @@ def test(img_id, vertical):
 
     file_path = base_dir + "/feature/" + vertical + ".pkl"
     feature_all = torch.load(file_path)
+    feature_all -= feature
+    feature_all = feature_all.norm(2,1)
+    
 
-    knn = NearestNeighbors(n_neighbors=10)
-    knn.fit(feature_all)
 
+
+    print("show predict")
     predict = knn.kneighbors(feature, return_distance=False)
     show_image(predict)
+
+
+
+
+
 
     with open(base_dir + "/image_lists/" + vertical + "_test.pkl", 'rb') as f:
         q_to_p_map = pickle.load(f)
