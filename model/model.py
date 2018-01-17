@@ -42,7 +42,7 @@ class Visnet_Pro(nn.Module):
         cat1 = torch.cat((out1, out2), dim=1)  # (?,1152)
         norm1 = self.bn1(cat1)
 
-        if self.train ==True:
+        if self.training ==True:
             out3, _ = self.inception(x)
         else:
             out3 = self.inception(x)
