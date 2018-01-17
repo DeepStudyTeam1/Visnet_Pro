@@ -33,9 +33,9 @@ for line in lines:
     else:
         dict1[line[5]] += 1
 print (dict1)
-dict2 = {'outer': {"outer", 'OUTER', '아우터', '패딩', '코트', 'Outer'},
-         'shirts': {"shirts", 'SHIRT', '셔츠', '남방/와이셔츠', 'SHIRTS'},
-         'top': {"top", 'TOP', '상의', '티셔츠', '니트', 'TEE', 'KNIT', '탑', 'Top'},
+dict2 = {'outer': {'outer', 'OUTER', '아우터', '패딩', '코트', 'Outer'},
+         'shirts': {'shirts', 'SHIRT', '셔츠', '남방/와이셔츠', 'SHIRTS'},
+         'top': {'top', 'TOP', '상의', '티셔츠', '니트', 'TEE', 'KNIT', '탑', 'Top'},
          'skirt': {'skirt', 'SKIRT', '스커트'},
          'dress': {'onepiece', 'DRESS', '드레스', 'dress', '원피스', 'ONEPIECE'}
          }
@@ -54,19 +54,21 @@ new_lines2 = []
 new_lines3 = []
 new_lines4 = []
 new_lines5 = []
+count = 0
 for line in lines:
     line = line.replace('"', "").strip("\n").split(";")
     if line[9] == "0":
+        count += 1
         continue
     else:
         new_line = [line[0], line[1], line[2], line[3], line[4], line[6], line[10]] # id, url, name, price, shop, small, date
-        if line[5] in {"outer", 'OUTER', '아우터', '패딩', '코트', 'Outer'}:
+        if line[5] in {'outer', 'OUTER', '아우터', '패딩', '코트', 'Outer'}:
             new_line.append("outer")
             new_lines1.append(new_line)
-        elif line[5] in {"shirts", 'SHIRT', '셔츠', '남방/와이셔츠', 'SHIRTS'}:
+        elif line[5] in {'shirts', 'SHIRT', '셔츠', '남방/와이셔츠', 'SHIRTS'}:
             new_line.append("shirts")
             new_lines2.append(new_line)
-        elif line[5] in {"top", 'TOP', '상의', '티셔츠', '니트', 'TEE', 'KNIT', '탑', 'Top'}:
+        elif line[5] in {'top', 'TOP', '상의', '티셔츠', '니트', 'TEE', 'KNIT', '탑', 'Top'}:
             new_line.append("top")
             new_lines3.append(new_line)
         elif line[5] in {'skirt', 'SKIRT', '스커트'}:
@@ -77,17 +79,23 @@ for line in lines:
             new_lines5.append(new_line)
         else:
             continue
+print(count)
 
 with open(item_dir + "/outer.pkl", 'wb') as f:
     pickle.dump(new_lines1, f)
+    print(len(new_lines1))
 with open(item_dir + "/shirts.pkl", 'wb') as f:
     pickle.dump(new_lines2, f)
+    print(len(new_lines2))
 with open(item_dir + "/top.pkl", 'wb') as f:
     pickle.dump(new_lines3, f)
+    print(len(new_lines3))
 with open(item_dir + "/skirt.pkl", 'wb') as f:
     pickle.dump(new_lines4, f)
+    print(len(new_lines4))
 with open(item_dir + "/dress.pkl", 'wb') as f:
     pickle.dump(new_lines5, f)
+    print(len(new_lines5))
 
 with open(item_dir + "/top.pkl", 'rb') as f:
     new = pickle.load(f)
