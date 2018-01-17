@@ -14,17 +14,21 @@ for item_path in all_item_path:
         item_list = pickle.load(f)
     count1 = 0
     count2 = 0
+    count3 = 0
     for item in item_list:
         item_id = item[0]
-        path = item_dir + "/" + str(item_id) + ".jpg"
+        path = img_dir + "/" + str(item_id) + ".jpg"
         try:
             Image.open(path)
             count1 += 1
         except:
-            print("path doesnt exist %s" %path)
+            if os.path.exists(path):
+                os.remove(path)
+                count3 += 0
             count2 += 1
-    print(count1)
-    print(count2)
+    print("success %d" %count1)
+    print("fail %d" %count2)
+    print("delete %d" %count3)
 
 
 
