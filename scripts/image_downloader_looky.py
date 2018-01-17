@@ -7,6 +7,7 @@ from PIL import Image
 from io import BytesIO
 import os
 import traceback
+import glob
 
 
 
@@ -57,23 +58,25 @@ class ParallelImageDownloader (object):
 
 
 if __name__ == "__main__":
-    url_file_path = base_dir + "/item.pkl"
-    dst_dir = base_dir + "/images"
-    if not os.path.exists(dst_dir):
-        os.mkdir(dst_dir)
-    images_downloaded = os.listdir (dst_dir)
+    item_dir = base_dir + "/item"
+    all_item_path = glob.glob(item_dir + "/*.pkl")
+    image_dir = base_dir + "/images"
+    if not os.path.exists(image_dir):
+        os.mkdir(image_dir)
+    images_downloaded = os.listdir (image_dir)
     ids_downloaded = set ([x.split (".")[0] for x in images_downloaded])
-    with open (url_file_path, 'rb') as f:
-        lines = pickle.load(f)
-    url_objects = {}
-    for line in lines:
-        img_id = line[0]
-        url = line[1]
-        print(img_id)
-        print(url)
-        if img_id not in ids_downloaded:
-            url_objects[img_id] = URLObject (img_id, url)  # Done to remove duplicates
-    url_objects = url_objects.values ()
-    print ("Commencing downloads for " + str (len (url_objects)) + " urls")
-    downloader = ParallelImageDownloader (25, dst_dir)
-    _ = downloader.download_batch (url_objects)
+
+    for item_path in all_item_path:
+        with open(item_path, 'rb') as f:
+            lines = pickle.load(f)
+        url_objects = {}
+        for line in lines:
+            img_id = line[0]
+            id_for_url = "%09d" %int(img_id)
+            url = "https://s3.ap-northeast-2.amazonaws.com/looky/" + id_for_url + ".jpg"
+            if img_id not in ids_downloaded:
+                url_objects[img_id] = URLObject(img_id, url)  # Done to remove duplicates
+        url_objects = url_objects.values()
+        print("Commencing downloads for " + str(len(url_objects)) + " urls")
+        downloader = ParallelImageDownloader(25, image_dir)
+        _ = downloader.download_batch(url_objects)

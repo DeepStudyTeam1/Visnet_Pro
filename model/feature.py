@@ -13,7 +13,7 @@ def to_var(x):
     return Variable(x, volatile = True)
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
-batch_size = 10
+batch_size = 100
 
 m1 = Visnet_Pro()
 if torch.cuda.is_available():
@@ -37,7 +37,7 @@ def feature(verticals):
    for vertical in verticals:
        path = base_dir + "/image_lists/" + vertical + "_retrieval.pkl"
        dataset = SingleImage(base_dir + "/images", path, transform=transform)
-       loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+       loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
        output = torch.Tensor(0,0)
 
