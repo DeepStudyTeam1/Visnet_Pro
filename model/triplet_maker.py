@@ -23,6 +23,7 @@ def download_one_image (id):
         line = urlFile.readlines ()[id - 1]
         line = line.strip ()
         line = line.split (",")
+        print(line[0])
         url = line[-1]
         print (url)
         try:
