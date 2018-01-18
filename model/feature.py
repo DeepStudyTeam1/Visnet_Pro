@@ -5,6 +5,7 @@ from torch.autograd import Variable
 import os
 import torch
 import glob
+import pickle
 
 def to_var(x):
     """Convert tensor to variable."""
@@ -53,10 +54,12 @@ def feature(verticals):
                print("Making features [%d/%d]" % (batch_idx, len(loader)))
 
        torch.save(output, file_path + "/" + vertical + ".pkl")
-       with open(base_dir + "/" + vertical + "_feature.txt", 'w') as f:
+       with open(file_path + "/" + vertical + "_feature_id.txt", 'w') as f:
            for id in id_list:
                f.write(str(id) + "\n")
+       with open (file_path + "/" + vertical + "_feature_id.pkl", 'w') as f:
+           pickle.dump(id_list,f)
 
-feature(["tops"])
+feature(["tops", "dresses", "skirts", "outerwear"])
 
 
