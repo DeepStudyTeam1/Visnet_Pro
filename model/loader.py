@@ -49,12 +49,10 @@ class SingleImage(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         img_id = self.singles[index]
-        print(img_id)
         img = self.loader(self.image_path + "/" + str(img_id) + ".jpg")
         if self.transform is not None:
             img = self.transform(img)
-        print (img)
-        return id, img
+        return img_id, img
 
     def __len__(self):
         return len(self.singles)
