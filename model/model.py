@@ -34,7 +34,6 @@ class Visnet_Pro(nn.Module):
             nn.MaxPool2d(kernel_size=3, stride=2, padding=0),  # (?,64,3,3)
         )
 
-        self.bn1 = nn.BatchNorm1d(1152)
 
         self.inception = torchvision.models.inception_v3(pretrained=True)
         for param in self.inception.parameters():
@@ -43,8 +42,6 @@ class Visnet_Pro(nn.Module):
         self.inception.fc = nn.Linear(2048, 1024)
         self.fc1 = nn.Linear(2176, 1024)
 
-        self.bn2 = nn.BatchNorm1d(1024)
-        self.bn3 = nn.BatchNorm1d(1024)
         self.lrn = LRN()
 
     def forward(self, x):
@@ -54,19 +51,18 @@ class Visnet_Pro(nn.Module):
         out2 = out2.view(out2.size(0), -1)  # (?, 1152)
 
         cat1 = torch.cat((out1, out2), dim=1)  # (?,1152)
-        norm1 = self.bn1(cat1)
+        norm1 = self.lrn(cat1)
 
         if self.training ==True:
             out3, _ = self.inception(x)
         else:
             out3 = self.inception(x)
-        norm2 = self.bn2(out3)
+        norm2 = self.lrn(out3)
 
         cat2 = torch.cat((norm1, norm2), dim=1)
 
         fc1 = self.fc1(cat2)
-        bn3 = self.bn3(fc1)
-        out = self.lrn(bn3)
+        out = self.lrn(fc1)
 
         return out
 
