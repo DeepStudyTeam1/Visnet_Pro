@@ -49,7 +49,7 @@ def feature(verticals):
            id, out = data
            out = m1(to_var(out)).data
            output = torch.cat((output, out), 0)
-           id.list.extend(id)
+           id_list.extend(id)
            if batch_idx % 10 == 0:
                print("Making features [%d/%d]" % (batch_idx, len(loader)))
 
