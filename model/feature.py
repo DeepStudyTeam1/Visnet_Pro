@@ -27,8 +27,6 @@ m1.eval()
 
 transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
 
-all_file_paths = glob.glob(base_dir + "/image_lists/*_retrieval.pkl")
-
 file_path = base_dir + "/feature"
 if not os.path.exists(file_path):
     os.mkdir(file_path)
@@ -39,12 +37,12 @@ def feature(verticals):
        dataset = SingleImage(base_dir + "/images", path, transform=transform)
        loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
+       id_list = []
+
        output = torch.Tensor(0,0)
 
        if torch.cuda.is_available():
            output = output.cuda()
-
-        id_list = []
 
        for batch_idx, data in enumerate(loader):
            id, out = data
@@ -55,8 +53,9 @@ def feature(verticals):
                print("Making features [%d/%d]" % (batch_idx, len(loader)))
 
        torch.save(output, file_path + "/" + vertical + ".pkl")
-       with open(base_dir + "/aigo.txt", 'w') as f:
-           f.write(id_list)
+       with open(base_dir + "/" + vertical + "_feature.txt", 'w') as f:
+           for id in id_list:
+               f.write(str(id) + "\n")
 
 feature(["tops"])
 

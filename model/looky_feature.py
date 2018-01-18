@@ -33,16 +33,16 @@ if not os.path.exists(file_path):
 
 def feature(verticals):
    for vertical in verticals:
-       path = base_dir + "/item/" + vertical + ".pkl"
+       path = base_dir + "/item/new_" + vertical + ".pkl"
+       print(path)
        dataset = SingleImage_for_looky(base_dir + "/images", path, transform=transform)
        loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
        output = torch.Tensor(0,0)
+       id_list = []
 
        if torch.cuda.is_available():
            output = output.cuda()
-
-        id_list = []
 
        for batch_idx, data in enumerate(loader):
            id, out = data
@@ -53,7 +53,7 @@ def feature(verticals):
                print("Making features [%d/%d]" % (batch_idx, len(loader)))
 
        torch.save(output, file_path + "/" + vertical + ".pkl")
-       with open(base_dir + "/aigo.txt", 'w') as f:
+       with open(base_dir + "/", 'w') as f:
            f.write(id_list)
 
 feature(["top"])

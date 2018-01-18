@@ -10,6 +10,8 @@ item_dir = base_dir + "/item"
 all_item_path = glob.glob(item_dir + "/*.pkl")
 
 for item_path in all_item_path:
+    new_item_list = []
+    print(item_path)
     with open(item_path, 'rb') as f:
         item_list = pickle.load(f)
     count1 = 0
@@ -20,12 +22,15 @@ for item_path in all_item_path:
         path = img_dir + "/" + str(item_id) + ".jpg"
         try:
             Image.open(path)
+            new_item_list.append(item)
             count1 += 1
         except:
             if os.path.exists(path):
                 os.remove(path)
                 count3 += 0
             count2 += 1
+    with open(item_dir + "/new_"+os.path.basename(item_path), 'wb') as f:
+        pickle.dump(new_item_list, f)
     print("success %d" %count1)
     print("fail %d" %count2)
     print("delete %d" %count3)

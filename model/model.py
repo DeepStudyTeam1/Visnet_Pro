@@ -3,6 +3,18 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 
+
+class LRN(nn.Module):
+    def __init__ (self):
+        super (LRN, self).__init__ ()
+    def forward (self, x):
+        div = x.pow(2)
+        div = div.sum(1, keepdim = True)
+        div = div.expand(x.size())
+        div = div.add (1.0).pow (0.5)
+        x = x.div(div)
+        return x
+
 class Visnet_Pro(nn.Module):
     def __init__(self):
         print("Create Visnet_Pro!")
@@ -33,6 +45,8 @@ class Visnet_Pro(nn.Module):
 
         self.bn2 = nn.BatchNorm1d(1024)
         self.bn3 = nn.BatchNorm1d(1024)
+        self.lrn = LRN()
+
     def forward(self, x):
         out1 = self.layer1(x)  # (?, 128,3,3)
         out1 = out1.view(out1.size(0), -1)  # (?, 1152)
@@ -51,7 +65,9 @@ class Visnet_Pro(nn.Module):
         cat2 = torch.cat((norm1, norm2), dim=1)
 
         fc1 = self.fc1(cat2)
-        out = self.bn3(fc1)
+        bn3 = self.bn3(fc1)
+        out = self.lrn(bn3)
+
         return out
 
 

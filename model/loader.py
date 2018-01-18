@@ -48,7 +48,7 @@ class SingleImage(torch.utils.data.Dataset):
         print("Load dataset! length: " + str(len(self.singles)))
 
     def __getitem__(self, index):
-        img_id = self.singles[index][0]
+        img_id = self.singles[index]
         img = self.loader(self.image_path + "/" + str(img_id) + ".jpg")
         if self.transform is not None:
             img = self.transform(img)
@@ -74,26 +74,6 @@ class Images(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.images)
-
-class SingleImage(torch.utils.data.Dataset):
-    def __init__(self, image_path, single_file_path, transform=None,
-                 loader=default_image_loader):
-        self.image_path = image_path
-        with open(single_file_path, 'rb') as f:
-            self.singles = pickle.load(f)
-        self.transform = transform
-        self.loader = loader
-        print("Load dataset! length: " + str(len(self.singles)))
-
-    def __getitem__(self, index):
-        img_id = self.singles[index][0]
-        img = self.loader(self.image_path + "/" + str(img_id) + ".jpg")
-        if self.transform is not None:
-            img = self.transform(img)
-        return id, img
-
-    def __len__(self):
-        return len(self.singles)
 
 class SingleImage_for_looky(torch.utils.data.Dataset):
     def __init__(self, image_path, single_file_path, transform=None,
@@ -110,25 +90,7 @@ class SingleImage_for_looky(torch.utils.data.Dataset):
         img = self.loader(self.image_path + "/" + str(img_id) + ".jpg")
         if self.transform is not None:
             img = self.transform(img)
-        return id, img
+        return [img_id, img]
 
     def __len__(self):
         return len(self.singles)
-
-class Images(torch.utils.data.Dataset):
-    def __init__(self, image_path, transform=None,
-                 loader=default_image_loader):
-        self.base_path = image_path
-        images = os.path.listdir(image_path)
-        self.transform = transform
-        self.loader = loader
-        print("Load dataset! length: " + str(len(images)))
-
-    def __getitem__(self, index):
-        img = self.loader(os.path.join(self.base_path, self.images[index]))
-        if self.transform is not None:
-            img = self.transform(img)
-        return img
-
-    def __len__(self):
-        return len(self.images)
