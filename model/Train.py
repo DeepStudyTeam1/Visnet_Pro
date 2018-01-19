@@ -21,7 +21,7 @@ base_dir = os.path.split (os.getcwd ())[0] + "/data/street2shop"
 
 batch_size = 100
 epochs = 1
-learning_rate = 0.01
+learning_rate = 0.001
 
 # create network
 m1 = Visnet_Pro ()
@@ -64,7 +64,7 @@ for i in range (epochs):
         loss.backward ()
         optimizer.step ()
 
-        print ('Epoch [%d/%d], Iter [%d/%d],  Loss: %.4f'
+        print ('Epoch [%d/%d], Iter [%d/%d],  Loss: %.8f'
                % (i, epochs, batch_idx, len (dataset) // batch_size, loss.data))
         if batch_idx % 500 == 0:
             torch.save (m1.state_dict (),
