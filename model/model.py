@@ -8,11 +8,9 @@ class LRN(nn.Module):
     def __init__ (self):
         super (LRN, self).__init__ ()
     def forward (self, x):
-        div = x.pow(2)
-        div = div.sum(1, keepdim = True)
+        div = x.norm(2,1, keepdim = True)
         div = div.expand(x.size())
-        div = div.add (1.0).pow (0.5)
-        x = x.div(div)
+        x = x/div
         return x
 
 class Visnet_Pro(nn.Module):

@@ -57,9 +57,9 @@ def feature(verticals):
        with open(file_path + "/" + vertical + "_feature_id.txt", 'w') as f:
            for id in id_list:
                f.write(str(id) + "\n")
-       with open (file_path + "/" + vertical + "_feature_id.pkl", 'w') as f:
+       with open (file_path + "/" + vertical + "_feature_id.pkl", 'wb') as f:
            pickle.dump(id_list,f)
 
-feature(["tops", "dresses", "skirts", "outerwear"])
+feature(["tops"])
 
 

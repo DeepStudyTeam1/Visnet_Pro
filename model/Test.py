@@ -59,49 +59,48 @@ def show_image(predictions):
         path = base_dir + "/images/" + str(i) + ".jpg"
         Image.open(path).show()
 
-def test(img_id, vertical, topk = 100):
-
-    print(img_id)
-    show_image([img_id])
-    img_path = base_dir + "/images/"+ str(img_id) + ".jpg"
-
+def test(img_path, vertical, topk = 100):
+    print(img_path)
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
     feature = m1(to_var(img.view(-1,3,299,299)))
 
     file_path = base_dir + "/feature/" + vertical + ".pkl"
     if torch.cuda.is_available():
-        feature_all = torch.load(file_path)
+        feature_all = torch.load(file_path).cuda()
     else:
         feature_all = torch.load(file_path, map_location=lambda storage, loc: storage)
     feature_all = feature_all - feature.data
     feature_all = feature_all.norm(2,1)
     _ , top_index = torch.topk(feature_all, topk , largest= False)
-    with open(base_dir + "/image_lists/" + vertical + "_retrieval.pkl", 'rb') as f:
-        line = pickle.load(f)
+    with open(base_dir + "/feature/" + vertical + "_feature_id.pkl", 'rb') as f:
+        id_list = pickle.load(f)
     top_id = []
     for index in top_index:
-        top_id.append(line[index])
-
-    print("show predict")
-    print(top_id)
+        top_id.append(id_list[index])
     return top_id
 
-vertical = "dresses"
-with open(base_dir + "/image_lists/" + vertical + "_test.pkl", 'rb') as f:
-    q_to_p_map = pickle.load(f)
 
 
-print(q_to_p_map)
-query_list = list(q_to_p_map.keys())
-img_id = query_list[2]
-top_id = test(57591, vertical)
-count = 0
+def eval(vertical):
+    with open(base_dir + "/image_lists/" + vertical + "_train.pkl", 'rb') as f:
+        q_to_p_map = pickle.load(f)
+    sum = 0
+    count2 = 0
+    for q in q_to_p_map:
+        if q_to_p_map[q] == "None":
+            continue
+        img_path = base_dir + "/images/crop_" + str(q) + ".jpg"
+        top_id = test(img_path,vertical,100)
+        count = 0
+        for p in q_to_p_map[q]:
+            if p in top_id:
+                count += 1
+        acc = count/len(q_to_p_map[q])
+        print(acc)
+        sum += acc
+        count2 += 1
+    acc_avg = sum / count2
+    print("final acc : %f" %acc_avg)
 
-for i in top_id:
-    if i in q_to_p_map[img_id]:
-        count += 1.0
-
-print("Acc : %.3f" % (count / len(q_to_p_map)))
-
-show_image(top_id)
+eval("tops")
