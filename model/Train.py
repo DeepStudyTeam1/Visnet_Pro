@@ -29,9 +29,9 @@ m2 = Tripletnet (m1)
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
     m2 = m2.cuda ()
-    params = torch.load (base_dir + '/params_final.pkl')
+    params = torch.load (base_dir + '/params_final_28.pkl')
 else:
-    params = torch.load (base_dir + '/params_final.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_final_28.pkl', map_location=lambda storage, loc: storage)
 m1.load_state_dict(params)
 
 
@@ -66,8 +66,8 @@ for i in range (epochs):
 
         print ('Epoch [%d/%d], Iter [%d/%d],  Loss: %.8f'
                % (i, epochs, batch_idx, len (dataset) // batch_size, loss.data))
-        if batch_idx % 500 == 0:
+        if batch_idx % 900 == 0:
             torch.save (m1.state_dict (),
-                        base_dir + '/params_' + str (i) + "_" + str (batch_idx) + '_1.pkl')
-torch.save (m1.state_dict (),base_dir + '/params_final_1.pkl')
+                        base_dir + '/params_final_' + str (batch_idx) + '_to_100.pkl')
+torch.save (m1.state_dict (),base_dir + '/params_final_100.pkl')
 print ("train success")
