@@ -59,7 +59,7 @@ def show_image(predictions):
         path = base_dir + "/images/" + str(i) + ".jpg"
         Image.open(path).show()
 
-def test(img_path, vertical, topk = 100):
+def test(img_path, vertical, topk = 1000):
     print(img_path)
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
