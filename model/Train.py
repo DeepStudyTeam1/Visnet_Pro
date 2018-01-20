@@ -42,7 +42,9 @@ for param in m2.parameters ():
 
 cudnn.benchmark = True
 
-transform = transforms.Compose ([transforms.Resize ((299, 299)), transforms.ToTensor ()])
+transform = transforms.Compose ([transforms.Resize ((299, 299)),
+                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+                                 transforms.ToTensor ()])
 
 optimizer = torch.optim.Adam (grad_param, lr=learning_rate)
 

@@ -26,7 +26,9 @@ else:
 m1.load_state_dict(params)
 m1.eval()
 
-transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
+transform = transforms.Compose ([transforms.Resize ((299, 299)),
+                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+                                 transforms.ToTensor ()])
 
 file_path = base_dir + "/feature"
 if not os.path.exists(file_path):

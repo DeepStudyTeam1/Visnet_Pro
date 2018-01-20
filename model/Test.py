@@ -17,7 +17,9 @@ def to_var(x):
 
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
-transform = transforms.Compose([transforms.Resize((299, 299)), transforms.ToTensor()])
+transform = transforms.Compose ([transforms.Resize ((299, 299)),
+                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+                                 transforms.ToTensor ()])
 
 m1 = Visnet_Pro ()
 
