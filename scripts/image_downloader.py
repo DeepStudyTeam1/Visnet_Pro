@@ -29,7 +29,7 @@ class ParallelImageDownloader (object):
     def download_image (self, urlObj):
         if self.is_url (urlObj.url):
             try:
-                r = requests.get (urlObj.url, timeout = 1)
+                r = requests.get (urlObj.url, timeout = 5)
                 if r.status_code == 200:
                     i = Image.open (BytesIO (r.content))
                     i.save (self.destination_path + "/" + urlObj.id + ".jpg")

@@ -1,7 +1,9 @@
 from PIL import Image
 import os
 import glob
+import torch
 
+print(torch.cuda.is_available())
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 all_image_path = glob.glob(base_dir + "/images/*.jpg")

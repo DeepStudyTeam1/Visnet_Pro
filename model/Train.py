@@ -19,12 +19,12 @@ verticals = ["tops", "dresses", "outerwear", "skirts"]
 # parameter
 base_dir = os.path.split (os.getcwd ())[0] + "/data/street2shop"
 
-batch_size = 100
+batch_size = 10
 epochs = 1
-learning_rate = 0.001
+learning_rate = 0.01
 
 # create network
-m1 = Visnet_Pro ()
+m1 = Visnet_Pro (heavy = True)
 m2 = Tripletnet (m1)
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
@@ -32,7 +32,7 @@ if torch.cuda.is_available ():
     params = torch.load (base_dir + '/params_final_28.pkl')
 else:
     params = torch.load (base_dir + '/params_final_28.pkl', map_location=lambda storage, loc: storage)
-m1.load_state_dict(params)
+# m1.load_state_dict(params)
 
 
 grad_param = []
@@ -66,8 +66,8 @@ for i in range (epochs):
 
         print ('Epoch [%d/%d], Iter [%d/%d],  Loss: %.8f'
                % (i, epochs, batch_idx, len (dataset) // batch_size, loss.data))
-        if batch_idx % 900 == 0:
+        if batch_idx % 1000 == 0:
             torch.save (m1.state_dict (),
-                        base_dir + '/params_final_' + str (batch_idx) + '_to_100.pkl')
-torch.save (m1.state_dict (),base_dir + '/params_final_100.pkl')
+                        base_dir + '/params_final_heavy_' + str (batch_idx) + '.pkl')
+torch.save (m1.state_dict (),base_dir + '/params_final_heavy.pkl')
 print ("train success")
