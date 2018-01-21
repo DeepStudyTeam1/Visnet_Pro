@@ -29,9 +29,9 @@ m2 = Tripletnet (m1)
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
     m2 = m2.cuda ()
-    params = torch.load (base_dir + '/params_final_28.pkl')
-else:
-    params = torch.load (base_dir + '/params_final_28.pkl', map_location=lambda storage, loc: storage)
+#   params = torch.load (base_dir + '/params_final_28.pkl')
+#else:
+#   params = torch.load (base_dir + '/params_final_28.pkl', map_location=lambda storage, loc: storage)
 # m1.load_state_dict(params)
 
 
@@ -43,8 +43,9 @@ for param in m2.parameters ():
 cudnn.benchmark = True
 
 transform = transforms.Compose ([transforms.Resize ((299, 299)),
-                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
-                                 transforms.ToTensor ()])
+                                 transforms.ToTensor (),
+                                transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))]
+                                )
 
 optimizer = torch.optim.Adam (grad_param, lr=learning_rate)
 
@@ -70,6 +71,6 @@ for i in range (epochs):
                % (i, epochs, batch_idx, len (dataset) // batch_size, loss.data))
         if batch_idx % 1000 == 0:
             torch.save (m1.state_dict (),
-                        base_dir + '/params_final_heavy_' + str (batch_idx) + '.pkl')
+                        base_dir + '/params_heavy_' + str (batch_idx) + '.pkl')
 torch.save (m1.state_dict (),base_dir + '/params_final_heavy.pkl')
 print ("train success")

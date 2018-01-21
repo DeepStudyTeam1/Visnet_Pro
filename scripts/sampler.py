@@ -41,7 +41,7 @@ def sample(verticals, number_of_n = 3):
 
 
 if __name__ == "__main__":
-    sample(["dresses"],2)
-    sample(["outerwear"], 8)
-    sample(["tops"], 8)
-    sample(["skirts"], 8)
+    sample(["dresses"],23)
+    sample(["outerwear"], 150)
+    sample(["tops"], 110)
+    sample(["skirts"], 130)
