@@ -18,16 +18,17 @@ def to_var(x):
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 transform = transforms.Compose ([transforms.Resize ((299, 299)),
-                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
-                                 transforms.ToTensor ()])
+                                 transforms.ToTensor (),
+                                 #transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+                                 ])
 
 m1 = Visnet_Pro ()
 
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
-    params = torch.load (base_dir + '/params_final.pkl')
+    params = torch.load (base_dir + '/params_final_100.pkl')
 else:
-    params = torch.load (base_dir + '/params_final.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_final_100.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
@@ -61,7 +62,7 @@ def show_image(predictions):
         path = base_dir + "/images/" + str(i) + ".jpg"
         Image.open(path).show()
 
-def test(img_path, vertical, topk = 1000):
+def test(img_path, vertical, topk = 700):
     print(img_path)
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
@@ -69,9 +70,11 @@ def test(img_path, vertical, topk = 1000):
 
     file_path = base_dir + "/feature/" + vertical + ".pkl"
     if torch.cuda.is_available():
-        feature_all = torch.load(file_path).cuda()
+        id_list, feature_all = torch.load(file_path)
+        feature_all = feature_all.cuda()
     else:
-        feature_all = torch.load(file_path, map_location=lambda storage, loc: storage)
+        id_list, feature_all = torch.load(file_path, map_location=lambda storage, loc: storage)
+    print("id_list test: " + str(id_list[0]))
     feature_all = feature_all - feature.data
     feature_all = feature_all.norm(2,1)
     _ , top_index = torch.topk(feature_all, topk , largest= False)
@@ -93,7 +96,7 @@ def eval(vertical):
         if q_to_p_map[q] == "None":
             continue
         img_path = base_dir + "/images/crop_" + str(q) + ".jpg"
-        top_id = test(img_path,vertical,100)
+        top_id = test(img_path,vertical)
         count = 0
         for p in q_to_p_map[q]:
             if p in top_id:
