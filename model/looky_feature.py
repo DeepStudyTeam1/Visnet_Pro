@@ -37,7 +37,7 @@ if not os.path.exists(file_path):
 
 def feature(verticals):
    for vertical in verticals:
-       path = base_dir + "/item/" + vertical + ".pkl"
+       path = base_dir + "/item/new_" + vertical + ".pkl"
        print(path)
        dataset = SingleImage_for_looky(base_dir + "/images", path, transform=transform)
        loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
@@ -58,6 +58,6 @@ def feature(verticals):
 
        torch.save([id_list, output], file_path + "/" + vertical + "_feature.pkl")
 
-feature(["top"])
+feature(["top", "dress", "outer", "skirt", "shirts"])
 
 
