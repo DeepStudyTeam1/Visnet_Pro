@@ -19,16 +19,16 @@ base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 
 transform = transforms.Compose ([transforms.Resize ((299, 299)),
                                  transforms.ToTensor (),
-                                 #transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+                                 transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
                                  ])
 
-m1 = Visnet_Pro ()
+m1 = Visnet_Pro (heavy = True)
 
 if torch.cuda.is_available ():
     m1 = m1.cuda ()
-    params = torch.load (base_dir + '/params_final_100.pkl')
+    params = torch.load (base_dir + '/params_final_heavy.pkl')
 else:
-    params = torch.load (base_dir + '/params_final_100.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_final_heavy.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
@@ -62,7 +62,7 @@ def show_image(predictions):
         path = base_dir + "/images/" + str(i) + ".jpg"
         Image.open(path).show()
 
-def test(img_path, vertical, topk = 700):
+def test(img_path, vertical, topk = 1000):
     print(img_path)
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
@@ -74,7 +74,6 @@ def test(img_path, vertical, topk = 700):
         feature_all = feature_all.cuda()
     else:
         id_list, feature_all = torch.load(file_path, map_location=lambda storage, loc: storage)
-    print("id_list test: " + str(id_list[0]))
     feature_all = feature_all - feature.data
     feature_all = feature_all.norm(2,1)
     _ , top_index = torch.topk(feature_all, topk , largest= False)

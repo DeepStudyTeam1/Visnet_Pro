@@ -16,18 +16,18 @@ def to_var(x):
 base_dir = os.path.split(os.getcwd())[0] + "/data/street2shop"
 batch_size = 100
 
-m1 = Visnet_Pro()
+m1 = Visnet_Pro(heavy = True)
 if torch.cuda.is_available():
     m1 = m1.cuda()
-    params = torch.load (base_dir + '/params_final_100.pkl')
+    params = torch.load (base_dir + '/params_final_heavy.pkl')
 else:
-    params = torch.load (base_dir + '/params_final_100.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load (base_dir + '/params_final_heavy.pkl', map_location=lambda storage, loc: storage)
 
 m1.load_state_dict(params)
 m1.eval()
 
 transform = transforms.Compose ([transforms.Resize ((299, 299)), transforms.ToTensor (),
-                                # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+                                transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
                                   ])
 
 file_path = base_dir + "/feature"

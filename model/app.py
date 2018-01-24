@@ -98,9 +98,9 @@ model = Visnet_Pro(heavy=True)
 
 if torch.cuda.is_available():
     model = model.cuda()
-    params = torch.load(base_dir + '/params_final_100.pkl')
+    params = torch.load(base_dir + '/params.pkl')
 else:
-    params = torch.load(base_dir + '/params_final_100.pkl', map_location=lambda storage, loc: storage)
+    params = torch.load(base_dir + '/params.pkl', map_location=lambda storage, loc: storage)
 
 model.load_state_dict(params)
 model.eval()
